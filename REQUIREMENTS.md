@@ -55,8 +55,8 @@ Operational settings live in **`config.json`** — separate from the personal `p
   "output_dir": "./output",
   "enabled_sources": ["adzuna", "himalayas", "remoteok", "jobicy", "working_nomads"],
   "weights": {                        // pluggable scorer weights (sum to 100)
-    "closeness": 30, "skills_match": 20, "experience_level": 10,
-    "salary": 10, "freshness": 20, "languages": 5,
+    "closeness": 30, "skills_match": 25, "experience_level": 10,
+    "salary": 10, "freshness": 15, "languages": 5,
     "employment_type": 5
   },
   "onboarding_llm": {                 // OpenAI-compatible; swap provider in config, no code change
