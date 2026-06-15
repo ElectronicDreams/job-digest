@@ -55,9 +55,9 @@ Operational settings live in **`config.json`** — separate from the personal `p
   "output_dir": "./output",
   "enabled_sources": ["adzuna", "himalayas", "remoteok", "jobicy", "working_nomads"],
   "weights": {                        // pluggable scorer weights (sum to 100)
-    "closeness": 25, "skills_match": 20, "experience_level": 10,
-    "salary": 10, "freshness": 15, "languages": 5,
-    "applicant_count": 5, "close_date": 5, "employment_type": 5
+    "closeness": 30, "skills_match": 20, "experience_level": 10,
+    "salary": 10, "freshness": 20, "languages": 5,
+    "employment_type": 5
   },
   "onboarding_llm": {                 // OpenAI-compatible; swap provider in config, no code change
     "provider": "gemini",             // DEFAULT: a hosted free tier (no credit card)
@@ -150,7 +150,7 @@ Each adapter normalizes its raw payload into one `Job`:
 - **Loose** seniority / title / tech match — in the neighborhood, not exact.
 
 **Ranking — heuristic at run time (no LLM in MVP), normalized 0–100:**
-tech / title / seniority closeness · required-skills match *(Tier A — in)* · per-tech experience level when stated · salary *(flag if missing)* · freshness · required languages · applicant count · close date · `employment_type` nudge.
+tech / title / seniority closeness · required-skills match *(Tier A — in)* · per-tech experience level when stated · salary *(flag if missing)* · freshness · required languages · `employment_type` nudge.
 
 **Selection rule:** gates drop; all gate-survivors are scored and shown **ranked**, with a **minimum-score cutoff (`min_score`, default 50/100, configurable)** removing weak matches — this is what keeps "never padded" real. An optional **daily-LLM scoring toggle** exists but is **off by default** (effectively v1.1).
 
@@ -159,7 +159,7 @@ tech / title / seniority closeness · required-skills match *(Tier A — in)* ·
 ## 9. Output
 
 - Local **static HTML**, **timestamped & non-overwriting:** `digest-YYYY-MM-DD_HHMM.html` (sorts chronologically, Windows-safe). All runs preserved; an **"open latest"** shortcut is the view button.
-- **One card per posting:** title · company · location · work type · matched tech · salary-or-flag · freshness · applicant / close info · apply link.
+- **One card per posting:** title · company · location · work type · matched tech · salary-or-flag · freshness · apply link.
 - **No email in the MVP.**
 
 ---
@@ -272,6 +272,7 @@ job-digest/
 - **Housekeeping & UI:** retention pruning (keep last *X* digests, auto-prune) · dashboard · application tracking · transit-time commute calc.
 - **Intelligence:** autonomous source discovery · adaptive source-learning · per-profile source selection.
 - **Enrichment signals:** company size · industry · company tech stack · ratings / funding · LinkedIn / Indeed.
+- **Scoring signals:** `applicant_count` and `close_date` scorer signals (omitted from MVP — not reliably available across sources; add once coverage is confirmed).
 
 ---
 

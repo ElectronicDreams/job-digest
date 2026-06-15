@@ -10,14 +10,12 @@
     "working_nomads"
   ],
   "weights": {
-    "closeness": 25,
+    "closeness": 30,
     "skills_match": 20,
     "experience_level": 10,
     "salary": 10,
-    "freshness": 15,
+    "freshness": 20,
     "languages": 5,
-    "applicant_count": 5,
-    "close_date": 5,
     "employment_type": 5
   },
   "onboarding_llm": {
