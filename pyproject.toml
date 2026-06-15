@@ -5,7 +5,7 @@ requires-python = ">=3.10"
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest"]
+dev = ["pytest", "ruff"]
 
 [build-system]
 requires = ["setuptools>=61"]
@@ -13,3 +13,19 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+]
+
+[tool.ruff.format]
+quote-style = "double"
