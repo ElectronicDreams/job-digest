@@ -1,0 +1,34 @@
+{
+  "recency_hours": 72,
+  "min_score": 50,
+  "output_dir": "./output",
+  "enabled_sources": [
+    "adzuna",
+    "himalayas",
+    "remoteok",
+    "jobicy",
+    "working_nomads"
+  ],
+  "weights": {
+    "closeness": 25,
+    "skills_match": 20,
+    "experience_level": 10,
+    "salary": 10,
+    "freshness": 15,
+    "languages": 5,
+    "applicant_count": 5,
+    "close_date": 5,
+    "employment_type": 5
+  },
+  "onboarding_llm": {
+    "provider": "gemini",
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+    "model": "gemini-2.5-flash",
+    "api_key_env": "GEMINI_API_KEY"
+  },
+  "daily_llm_scoring": {
+    "enabled": false,
+    "model": null
+  },
+  "log_level": "INFO"
+}

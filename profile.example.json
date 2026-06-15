@@ -1,0 +1,53 @@
+{
+  "title_variants": [
+    "Senior Frontend Developer",
+    "Senior Angular Developer",
+    "Frontend Engineer",
+    "UI Engineer",
+    "Web Developer"
+  ],
+  "skills": [
+    "Angular",
+    "TypeScript",
+    "JavaScript",
+    "RxJS",
+    "HTML",
+    "CSS",
+    "REST APIs",
+    "Git"
+  ],
+  "seniority_terms": [
+    "senior",
+    "lead",
+    "principal",
+    "staff"
+  ],
+  "experience_terms": [
+    "5+ years",
+    "7+ years",
+    "experienced"
+  ],
+  "location": "Toronto, ON, Canada",
+  "acceptable_locations": [
+    "Toronto",
+    "Ontario",
+    "Canada",
+    "Remote",
+    "Remote - Canada",
+    "Remote - North America",
+    "Worldwide"
+  ],
+  "work_types": [
+    "remote",
+    "hybrid"
+  ],
+  "work_authorization": "Authorized to work in Canada",
+  "salary_floor": {
+    "amount": 100000,
+    "currency": "CAD"
+  },
+  "employment_types": [
+    "permanent",
+    "contract"
+  ]
+}
