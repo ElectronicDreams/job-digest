@@ -1,6 +1,3 @@
-def main():
-    print("jobdigest: hello")
+from jobdigest.cli import main
 
-
-if __name__ == "__main__":
-    main()
+main()
