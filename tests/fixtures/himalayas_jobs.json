@@ -1,0 +1,28 @@
+{
+  "jobs": [
+    {
+      "id": "abc123",
+      "title": "Senior Python Developer",
+      "companyName": "Acme Corp",
+      "url": "https://himalayas.app/companies/acme/jobs/senior-python-developer",
+      "jobType": "fulltime",
+      "postedAt": "2099-01-01T12:00:00.000Z",
+      "description": "<p>Build great things with Python.</p>",
+      "locations": ["Worldwide"],
+      "salary": {"min": 100000, "max": 150000, "currency": "USD"},
+      "remote": true
+    },
+    {
+      "id": "def456",
+      "title": "Frontend Engineer",
+      "companyName": "Beta Ltd",
+      "url": "https://himalayas.app/companies/beta/jobs/frontend-engineer",
+      "jobType": "contract",
+      "postedAt": "2099-01-01T08:00:00.000Z",
+      "description": null,
+      "locations": ["North America"],
+      "salary": null,
+      "remote": false
+    }
+  ]
+}
