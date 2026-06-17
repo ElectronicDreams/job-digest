@@ -28,6 +28,7 @@ def _config(recency_hours: int = 72) -> Config:
         onboarding_llm=_LLM,
         daily_llm_scoring={"enabled": False, "model": None},
         log_level="INFO",
+        exclusion_phrases=[],
     )
 
 

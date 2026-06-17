@@ -27,6 +27,7 @@ _DEFAULTS: dict = {
     },
     "daily_llm_scoring": {"enabled": False, "model": None},
     "log_level": "INFO",
+    "exclusion_phrases": [],
 }
 
 
@@ -48,6 +49,7 @@ class Config:
     onboarding_llm: LLMConfig
     daily_llm_scoring: dict
     log_level: str
+    exclusion_phrases: list
 
 
 def load_config(path: Path = Path("config.json")) -> Config:
@@ -70,6 +72,7 @@ def load_config(path: Path = Path("config.json")) -> Config:
         onboarding_llm=LLMConfig(**llm_raw),
         daily_llm_scoring=dict(merged["daily_llm_scoring"]),
         log_level=str(merged["log_level"]),
+        exclusion_phrases=list(merged.get("exclusion_phrases", [])),
     )
 
 

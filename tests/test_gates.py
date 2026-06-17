@@ -1,3 +1,6 @@
+from pathlib import Path
+
+from jobdigest.config import Config, LLMConfig
 from jobdigest.core.gates import (  # noqa: E501
     _passes_eligibility_gate,
     _passes_metro_gate,
@@ -5,6 +8,31 @@ from jobdigest.core.gates import (  # noqa: E501
     apply_gates,
 )
 from jobdigest.models import Job, Profile
+
+_PHRASES = ["uk only", "must be located in the uk", "no international applicants"]
+
+_LLM = LLMConfig(
+    provider="test",
+    base_url="https://example.com",
+    model="test-model",
+    api_key_env="TEST_KEY",
+)
+
+
+def _config(exclusion_phrases: list | None = None) -> Config:
+    return Config(
+        recency_hours=72,
+        min_score=50,
+        output_dir=Path("./output"),
+        enabled_sources=[],
+        weights={},
+        onboarding_llm=_LLM,
+        daily_llm_scoring={"enabled": False, "model": None},
+        log_level="INFO",
+        exclusion_phrases=exclusion_phrases
+        if exclusion_phrases is not None
+        else _PHRASES,  # noqa: E501
+    )
 
 
 def _job(**kwargs) -> Job:
@@ -62,7 +90,7 @@ def test_metro_case_insensitive():
 
 
 def test_metro_empty_profile_location_keeps_all_remote():
-    job = _job(is_remote=True, location="us only")
+    job = _job(is_remote=True)
     assert (
         _passes_metro_gate(job, _profile(location="", acceptable_locations=[])) is True
     )  # noqa: E501
@@ -72,54 +100,55 @@ def test_metro_empty_profile_location_keeps_all_remote():
 
 
 def test_eligibility_no_description_keeps():
-    assert _passes_eligibility_gate(_job(description=None)) is True
+    assert _passes_eligibility_gate(_job(description=None), _PHRASES) is True
 
 
 def test_eligibility_clean_description_keeps():
     assert (
-        _passes_eligibility_gate(_job(description="Great Python role, fully remote."))
+        _passes_eligibility_gate(_job(description="Great Python role."), _PHRASES)
         is True
     )  # noqa: E501
 
 
-def test_eligibility_us_only_drops():
-    assert _passes_eligibility_gate(_job(description="This role is US only.")) is False
-
-
-def test_eligibility_usa_only_drops():
+def test_eligibility_phrase_match_drops():
     assert (
-        _passes_eligibility_gate(_job(description="Open to USA only candidates."))
-        is False
-    )  # noqa: E501
+        _passes_eligibility_gate(_job(description="This role is UK only."), _PHRASES)
+        is False  # noqa: E501
+    )
 
 
-def test_eligibility_must_reside_drops():
+def test_eligibility_second_phrase_drops():
+    desc = "You must be located in the UK to apply."
+    assert _passes_eligibility_gate(_job(description=desc), _PHRASES) is False
+
+
+def test_eligibility_no_international_drops():
     assert (
         _passes_eligibility_gate(
-            _job(description="You must reside in the United States to apply.")
+            _job(description="No international applicants, sorry."), _PHRASES
         )
         is False
     )
 
 
-def test_eligibility_no_canada_drops():
-    assert (
-        _passes_eligibility_gate(_job(description="No Canada applicants please."))
-        is False
-    )  # noqa: E501
-
-
 def test_eligibility_ambiguous_keeps():
     assert (
         _passes_eligibility_gate(
-            _job(description="We are an equal opportunity employer.")
+            _job(description="We are an equal opportunity employer."), _PHRASES
         )
         is True
     )
 
 
 def test_eligibility_case_insensitive():
-    assert _passes_eligibility_gate(_job(description="US ONLY APPLICANTS")) is False
+    assert (
+        _passes_eligibility_gate(_job(description="UK ONLY APPLICANTS"), _PHRASES)
+        is False
+    )  # noqa: E501
+
+
+def test_eligibility_empty_phrases_always_keeps():
+    assert _passes_eligibility_gate(_job(description="UK only."), []) is True
 
 
 # --- Title/tech gate ---
@@ -161,7 +190,7 @@ def test_title_case_insensitive():
 
 def test_apply_gates_all_pass():
     jobs = [_job(is_remote=True, title="Senior Python Developer")]
-    result = apply_gates(jobs, _profile())
+    result = apply_gates(jobs, _profile(), _config())
     assert len(result) == 1
 
 
@@ -169,17 +198,22 @@ def test_apply_gates_drops_failed_metro():
     jobs = [
         _job(is_remote=False, location="vancouver, bc", title="Senior Python Developer")
     ]  # noqa: E501
-    assert apply_gates(jobs, _profile()) == []
+    assert apply_gates(jobs, _profile(), _config()) == []
 
 
 def test_apply_gates_drops_failed_eligibility():
-    jobs = [_job(is_remote=True, description="US only applicants.")]
-    assert apply_gates(jobs, _profile()) == []
+    jobs = [_job(is_remote=True, description="UK only applicants.")]
+    assert apply_gates(jobs, _profile(), _config()) == []
+
+
+def test_apply_gates_empty_exclusion_phrases_keeps_all_eligible():
+    jobs = [_job(is_remote=True, description="UK only applicants.")]
+    assert len(apply_gates(jobs, _profile(), _config(exclusion_phrases=[]))) == 1
 
 
 def test_apply_gates_drops_failed_title():
     jobs = [_job(is_remote=True, title="Marketing Manager")]
-    assert apply_gates(jobs, _profile()) == []
+    assert apply_gates(jobs, _profile(), _config()) == []
 
 
 def test_apply_gates_mixed_list():
@@ -188,6 +222,6 @@ def test_apply_gates_mixed_list():
         _job(id="2", is_remote=False, location="vancouver, bc"),
         _job(id="3", is_remote=True, title="Sales Executive"),
     ]
-    result = apply_gates(jobs, _profile())
+    result = apply_gates(jobs, _profile(), _config())
     assert len(result) == 1
     assert result[0].id == "1"

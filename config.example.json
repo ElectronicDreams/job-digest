@@ -28,5 +28,9 @@
     "enabled": false,
     "model": null
   },
-  "log_level": "INFO"
+  "log_level": "INFO",
+  "exclusion_phrases": [
+    "replace with phrases from job descriptions that indicate you are not eligible",
+    "e.g. 'us only' if you are outside the US, or 'uk only' if you are outside the UK"
+  ]
 }
