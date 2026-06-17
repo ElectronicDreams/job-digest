@@ -35,8 +35,14 @@ def _run() -> None:
     if not Path("profile.json").exists():
         print("No profile found. Run `python -m jobdigest onboard` to get started.")
         sys.exit(1)
-    # Full pipeline wired in Issue #7.
-    print("jobdigest run: pipeline not yet implemented.")
+
+    from jobdigest.config import load_config, load_profile
+    from jobdigest.runner import run
+
+    config = load_config()
+    profile = load_profile()
+    out_path = run(config, profile)
+    print(f"Digest written to {out_path}")
 
 
 def _onboard(args: argparse.Namespace) -> None:
