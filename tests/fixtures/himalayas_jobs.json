@@ -1,28 +1,40 @@
 {
   "jobs": [
     {
-      "id": "abc123",
       "title": "Senior Python Developer",
+      "excerpt": "Build great things with Python.",
       "companyName": "Acme Corp",
-      "url": "https://himalayas.app/companies/acme/jobs/senior-python-developer",
-      "jobType": "fulltime",
-      "postedAt": "2099-01-01T12:00:00.000Z",
+      "companySlug": "acme-corp",
+      "employmentType": "Full-time",
+      "minSalary": 100000,
+      "maxSalary": 150000,
+      "salaryPeriod": "yearly",
+      "currency": "USD",
+      "locationRestrictions": [],
+      "categories": ["Python", "Backend"],
       "description": "<p>Build great things with Python.</p>",
-      "locations": ["Worldwide"],
-      "salary": {"min": 100000, "max": 150000, "currency": "USD"},
-      "remote": true
+      "pubDate": 4070908800,
+      "expiryDate": 4073500800,
+      "applicationLink": "https://himalayas.app/companies/acme-corp/jobs/senior-python-developer",
+      "guid": "https://himalayas.app/companies/acme-corp/jobs/senior-python-developer"
     },
     {
-      "id": "def456",
       "title": "Frontend Engineer",
+      "excerpt": "Build React UIs.",
       "companyName": "Beta Ltd",
-      "url": "https://himalayas.app/companies/beta/jobs/frontend-engineer",
-      "jobType": "contract",
-      "postedAt": "2099-01-01T08:00:00.000Z",
+      "companySlug": "beta-ltd",
+      "employmentType": "Contractor",
+      "minSalary": null,
+      "maxSalary": null,
+      "salaryPeriod": null,
+      "currency": null,
+      "locationRestrictions": ["United States"],
+      "categories": ["React", "Frontend"],
       "description": null,
-      "locations": ["North America"],
-      "salary": null,
-      "remote": false
+      "pubDate": 4070908800,
+      "expiryDate": 4073500800,
+      "applicationLink": "https://himalayas.app/companies/beta-ltd/jobs/frontend-engineer",
+      "guid": "https://himalayas.app/companies/beta-ltd/jobs/frontend-engineer"
     }
   ]
 }
