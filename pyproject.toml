@@ -5,6 +5,7 @@ requires-python = ">=3.10"
 dependencies = [
     "requests>=2.31",
     "feedparser>=6.0",
+    "nh3>=0.2",
 ]
 
 [project.optional-dependencies]

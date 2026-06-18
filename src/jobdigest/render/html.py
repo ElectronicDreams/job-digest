@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+import nh3
+
 from jobdigest.config import Config
 from jobdigest.models import Job
 
@@ -22,9 +24,21 @@ h1 { font-size: 1.4rem; margin-bottom: 1rem; }
 .meta span + span::before { content: " · "; }
 .salary { font-size: 0.9rem; margin-bottom: 0.3rem; }
 .salary.missing { color: #b45309; }
-.desc   { font-size: 0.82rem; color: #444; margin-top: 0.4rem;
-          display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
-          overflow: hidden; }
+details.desc { font-size: 0.82rem; color: #444; margin-top: 0.5rem; }
+details.desc summary { cursor: pointer; color: #1a0dab; font-size: 0.82rem;
+                        list-style: none; display: inline-flex; align-items: center;
+                        gap: 0.3rem; user-select: none; }
+details.desc summary::before { content: "▶"; font-size: 0.6rem;
+                               transition: transform 0.15s; }
+details.desc[open] summary::before { transform: rotate(90deg); }
+details.desc summary::-webkit-details-marker { display: none; }
+details.desc .desc-body { margin-top: 0.5rem; line-height: 1.55;
+                           max-height: 20rem; overflow-y: auto; }
+details.desc .desc-body p,
+details.desc .desc-body ul,
+details.desc .desc-body ol { margin-bottom: 0.4rem; }
+details.desc .desc-body ul,
+details.desc .desc-body ol { padding-left: 1.25rem; }
 .attribution { font-size: 0.78rem; color: #888; margin-top: 0.4rem; display: block; }
 .attribution a { color: #888; }
 """
@@ -63,10 +77,13 @@ def _card_html(job: Job) -> str:
     )
     desc_html = ""
     if job.description:
-        import html as _html
-
-        snippet = _html.escape(job.description[:300].replace("\n", " "))
-        desc_html = f'<div class="desc">{snippet}</div>'
+        safe = nh3.clean(job.description)
+        desc_html = (
+            '<details class="desc">'
+            "<summary>Show description</summary>"
+            f'<div class="desc-body">{safe}</div>'
+            "</details>"
+        )
     attribution = ""
     if job.source == "himalayas":
         attribution = (
