@@ -40,6 +40,8 @@ def _job(description: str | None = None) -> Job:
 def test_description_safe_html_is_rendered():
     html = render_digest([_job("<p>Good job description</p>")], [], _CONFIG)
     assert "<p>Good job description</p>" in html
+    assert "<details" in html
+    assert "Show description" in html
 
 
 def test_description_script_tag_is_stripped():
@@ -67,7 +69,7 @@ def test_description_iframe_is_stripped():
 
 def test_description_none_renders_no_desc_block():
     html = render_digest([_job(None)], [], _CONFIG)
-    assert 'class="desc"' not in html
+    assert "<details" not in html
 
 
 def test_no_jobs_renders_empty_state():
