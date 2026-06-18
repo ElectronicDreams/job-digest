@@ -40,7 +40,7 @@ def run(
         new_jobs = [j for j in all_jobs if store.is_new(make_dedup_key(j))]
         gated = apply_gates(new_jobs, profile, config)
         ranked = rank_jobs(gated, profile, config)
-        for job in new_jobs:
+        for job in ranked:
             store.mark_seen(make_dedup_key(job))
 
     html = render_digest(ranked, failed_sources, config)
