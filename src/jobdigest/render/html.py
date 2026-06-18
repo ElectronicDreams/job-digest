@@ -63,10 +63,7 @@ def _card_html(job: Job) -> str:
     )
     desc_html = ""
     if job.description:
-        import html as _html
-
-        snippet = _html.escape(job.description[:300].replace("\n", " "))
-        desc_html = f'<div class="desc">{snippet}</div>'
+        desc_html = f'<div class="desc">{job.description}</div>'
     attribution = ""
     if job.source == "himalayas":
         attribution = (
