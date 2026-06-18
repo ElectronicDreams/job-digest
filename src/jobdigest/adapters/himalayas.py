@@ -3,7 +3,6 @@ from datetime import datetime, timedelta, timezone
 from jobdigest.adapters.base import JobSource
 from jobdigest.config import Config
 from jobdigest.models import Job
-from jobdigest.utils.dates import parse_date
 from jobdigest.utils.http import get_json
 from jobdigest.utils.location import normalize_location
 from jobdigest.utils.logging import get_logger
@@ -12,15 +11,25 @@ _BASE_URL = "https://himalayas.app/jobs/api"
 _LOGGER = get_logger(__name__)
 
 _EMPLOYMENT_TYPE_MAP: dict[str, str] = {
+    "full-time": "full-time",
     "fulltime": "full-time",
+    "part-time": "part-time",
     "parttime": "part-time",
+    "contractor": "contract",
     "contract": "contract",
+    "freelance": "contract",
     "internship": "internship",
 }
 
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
+
+
+def _parse_pubdate(raw_value: object) -> datetime | None:
+    if isinstance(raw_value, (int, float)):
+        return datetime.fromtimestamp(raw_value, tz=timezone.utc)
+    return None
 
 
 class HimalayasSource(JobSource):
@@ -39,41 +48,43 @@ class HimalayasSource(JobSource):
         results: list[Job] = []
 
         for raw in jobs_raw:
-            posted = parse_date(raw.get("postedAt"))
+            posted = _parse_pubdate(raw.get("pubDate"))
             if posted is not None and posted < cutoff:
                 continue
 
-            salary_raw = raw.get("salary")
+            min_sal = raw.get("minSalary")
+            max_sal = raw.get("maxSalary")
             salary = (
                 {
-                    "min": salary_raw.get("min"),
-                    "max": salary_raw.get("max"),
-                    "currency": salary_raw.get("currency"),
+                    "min": min_sal,
+                    "max": max_sal,
+                    "currency": raw.get("currency"),
+                    "period": raw.get("salaryPeriod"),
                 }
-                if isinstance(salary_raw, dict)
+                if (min_sal is not None or max_sal is not None)
                 else None
             )
 
-            locations: list = raw.get("locations") or []
-            location_str = normalize_location(locations[0] if locations else None)
-            is_remote = bool(raw.get("remote", False)) or "remote" in location_str
+            restrictions: list = raw.get("locationRestrictions") or []
+            first_loc = restrictions[0] if restrictions else "Remote"
+            location_str = normalize_location(first_loc)
 
-            job_type_raw = (raw.get("jobType") or "").lower()
+            job_type_raw = (raw.get("employmentType") or "").strip().lower()
             employment_type = _EMPLOYMENT_TYPE_MAP.get(job_type_raw)
 
             results.append(
                 Job(
                     source="himalayas",
-                    id=str(raw.get("id", "")),
+                    id=str(raw.get("guid", raw.get("applicationLink", ""))),
                     title=str(raw.get("title", "")),
                     company=str(raw.get("companyName", "")),
                     location=location_str,
-                    is_remote=is_remote,
-                    url=str(raw.get("url", "")),
+                    is_remote=True,
+                    url=str(raw.get("applicationLink", raw.get("guid", ""))),
                     salary=salary,
                     employment_type=employment_type,
                     posted_date=posted,
-                    description=raw.get("description"),
+                    description=raw.get("description") or raw.get("excerpt"),
                 )
             )
 

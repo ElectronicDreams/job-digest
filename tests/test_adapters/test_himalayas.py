@@ -37,19 +37,29 @@ def test_fetch_happy_path_returns_jobs():
         result = HimalayasSource(_config()).fetch()
     assert len(result) == 2
     assert result[0].source == "himalayas"
-    assert result[0].id == "abc123"
     assert result[0].title == "Senior Python Developer"
     assert result[0].company == "Acme Corp"
     assert (
         result[0].url
-        == "https://himalayas.app/companies/acme/jobs/senior-python-developer"
+        == "https://himalayas.app/companies/acme-corp/jobs/senior-python-developer"
     )
+
+
+def test_fetch_id_uses_guid():
+    with patch("jobdigest.adapters.himalayas.get_json", return_value=_FIXTURE):
+        result = HimalayasSource(_config()).fetch()
+    assert "himalayas.app" in result[0].id
 
 
 def test_fetch_salary_parsed():
     with patch("jobdigest.adapters.himalayas.get_json", return_value=_FIXTURE):
         result = HimalayasSource(_config()).fetch()
-    assert result[0].salary == {"min": 100000, "max": 150000, "currency": "USD"}
+    assert result[0].salary == {
+        "min": 100000,
+        "max": 150000,
+        "currency": "USD",
+        "period": "yearly",
+    }
 
 
 def test_fetch_missing_salary_is_none():
@@ -65,17 +75,24 @@ def test_fetch_employment_type_mapped():
     assert result[1].employment_type == "contract"
 
 
-def test_fetch_is_remote_from_flag():
+def test_fetch_all_jobs_are_remote():
     with patch("jobdigest.adapters.himalayas.get_json", return_value=_FIXTURE):
         result = HimalayasSource(_config()).fetch()
-    assert result[0].is_remote is True
+    assert all(j.is_remote for j in result)
 
 
-def test_fetch_location_normalized():
+def test_fetch_location_from_restrictions():
     with patch("jobdigest.adapters.himalayas.get_json", return_value=_FIXTURE):
         result = HimalayasSource(_config()).fetch()
-    assert result[0].location == "worldwide"
-    assert result[1].location == "north america"
+    assert result[0].location == "remote"
+    assert result[1].location == "united states"
+
+
+def test_fetch_pubdate_parsed_from_timestamp():
+    with patch("jobdigest.adapters.himalayas.get_json", return_value=_FIXTURE):
+        result = HimalayasSource(_config()).fetch()
+    assert result[0].posted_date is not None
+    assert result[0].posted_date.tzinfo is not None
 
 
 def test_fetch_empty_response():
@@ -86,21 +103,22 @@ def test_fetch_empty_response():
 
 def test_fetch_recency_filter_inside_window():
     now = datetime(2024, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
-    # posted 1 hour ago → inside 72h window
-    recent = (now - timedelta(hours=1)).isoformat()
+    recent_ts = int((now - timedelta(hours=1)).timestamp())
     payload = {
         "jobs": [
             {
-                "id": "1",
                 "title": "Job",
                 "companyName": "Co",
-                "url": "https://himalayas.app/jobs/1",
-                "jobType": "fulltime",
-                "postedAt": recent,
+                "employmentType": "Full-time",
+                "minSalary": None,
+                "maxSalary": None,
+                "currency": None,
+                "salaryPeriod": None,
+                "locationRestrictions": [],
                 "description": None,
-                "locations": [],
-                "salary": None,
-                "remote": True,
+                "pubDate": recent_ts,
+                "applicationLink": "https://himalayas.app/jobs/1",
+                "guid": "https://himalayas.app/jobs/1",
             }
         ]
     }
@@ -114,21 +132,22 @@ def test_fetch_recency_filter_inside_window():
 
 def test_fetch_recency_filter_outside_window():
     now = datetime(2024, 6, 1, 12, 0, 0, tzinfo=timezone.utc)
-    # posted 100 hours ago → outside 72h window
-    old = (now - timedelta(hours=100)).isoformat()
+    old_ts = int((now - timedelta(hours=100)).timestamp())
     payload = {
         "jobs": [
             {
-                "id": "2",
                 "title": "Old Job",
                 "companyName": "OldCo",
-                "url": "https://himalayas.app/jobs/2",
-                "jobType": "fulltime",
-                "postedAt": old,
+                "employmentType": "Full-time",
+                "minSalary": None,
+                "maxSalary": None,
+                "currency": None,
+                "salaryPeriod": None,
+                "locationRestrictions": [],
                 "description": None,
-                "locations": [],
-                "salary": None,
-                "remote": True,
+                "pubDate": old_ts,
+                "applicationLink": "https://himalayas.app/jobs/2",
+                "guid": "https://himalayas.app/jobs/2",
             }
         ]
     }
