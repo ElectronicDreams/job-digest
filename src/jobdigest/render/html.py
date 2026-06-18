@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+import nh3
+
 from jobdigest.config import Config
 from jobdigest.models import Job
 
@@ -63,7 +65,8 @@ def _card_html(job: Job) -> str:
     )
     desc_html = ""
     if job.description:
-        desc_html = f'<div class="desc">{job.description}</div>'
+        safe = nh3.clean(job.description)
+        desc_html = f'<div class="desc">{safe}</div>'
     attribution = ""
     if job.source == "himalayas":
         attribution = (
