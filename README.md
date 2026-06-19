@@ -61,7 +61,10 @@ Open your WSL2 terminal (Ubuntu is the most common distribution) and follow the 
 ```bash
 git clone https://github.com/ElectronicDreams/job-digest.git
 cd job-digest
+git checkout pre-release-test-himalayas-only
 ```
+
+> This branch contains the Himalayas adapter and the core pipeline in a tested, working state. The `main` branch is under active development and may be ahead of what is documented here.
 
 ### 2. Create and activate a virtual environment
 
