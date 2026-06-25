@@ -1,0 +1,22 @@
+[
+  {
+    "url": "https://www.workingnomads.com/job/go/1691057/",
+    "title": "Senior Python Developer",
+    "description": "<p>Build scalable backend systems with Python.</p>",
+    "company_name": "Acme Corp",
+    "category_name": "Development",
+    "tags": "python,backend,aws",
+    "location": "North America",
+    "pub_date": "2099-01-01T10:00:00-04:00"
+  },
+  {
+    "url": "https://www.workingnomads.com/job/go/1691058/",
+    "title": "Frontend Contractor",
+    "description": null,
+    "company_name": "Beta Ltd",
+    "category_name": "Development",
+    "tags": "react,contract,javascript",
+    "location": "Worldwide, North America, Europe",
+    "pub_date": "2099-01-01T06:00:00-04:00"
+  }
+]
