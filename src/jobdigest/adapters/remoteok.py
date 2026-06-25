@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from jobdigest.adapters.base import JobSource
 from jobdigest.config import Config
 from jobdigest.models import Job
+from jobdigest.utils.dates import parse_date
 from jobdigest.utils.http import get_json
 from jobdigest.utils.location import normalize_location
 from jobdigest.utils.logging import get_logger
@@ -13,15 +14,6 @@ _LOGGER = get_logger(__name__)
 
 def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
-
-
-def _parse_date(raw: object) -> datetime | None:
-    if not isinstance(raw, str):
-        return None
-    try:
-        return datetime.fromisoformat(raw)
-    except ValueError:
-        return None
 
 
 def _infer_employment_type(tags: list) -> str | None:
@@ -57,7 +49,7 @@ class RemoteOkSource(JobSource):
             if not isinstance(raw, dict) or "slug" not in raw:
                 continue
 
-            posted = _parse_date(raw.get("date"))
+            posted = parse_date(raw.get("date"))
             if posted is not None and posted < cutoff:
                 continue
 
