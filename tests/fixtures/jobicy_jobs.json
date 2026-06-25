@@ -1,0 +1,44 @@
+{
+  "apiVersion": "2.0",
+  "jobCount": 2,
+  "jobs": [
+    {
+      "id": 142662,
+      "url": "https://jobicy.com/jobs/142662-senior-backend-engineer",
+      "jobSlug": "142662-senior-backend-engineer",
+      "jobTitle": "Senior Backend Engineer",
+      "companyName": "Acme Corp",
+      "companyLogo": "https://jobicy.com/logo/acme.jpg",
+      "jobIndustry": ["Programming"],
+      "jobType": ["Full-Time"],
+      "jobGeo": "USA",
+      "jobLevel": "Senior",
+      "jobExcerpt": "Build scalable backend systems.",
+      "jobDescription": "<p>Build scalable backend systems with Python and AWS.</p>",
+      "pubDate": "2099-01-01T00:00:00+00:00",
+      "salaryMin": 120000,
+      "salaryMax": 180000,
+      "salaryCurrency": "USD",
+      "salaryPeriod": "yearly"
+    },
+    {
+      "id": 789012,
+      "url": "https://jobicy.com/jobs/789012-react-developer",
+      "jobSlug": "789012-react-developer",
+      "jobTitle": "React Developer",
+      "companyName": "Beta Ltd",
+      "companyLogo": null,
+      "jobIndustry": ["Programming"],
+      "jobType": ["Contract"],
+      "jobGeo": "Belgium,  Spain,  UK",
+      "jobLevel": "Mid-Level",
+      "jobExcerpt": "Build React UIs.",
+      "jobDescription": null,
+      "pubDate": "2099-01-01T00:00:00+00:00",
+      "salaryMin": null,
+      "salaryMax": null,
+      "salaryCurrency": null,
+      "salaryPeriod": null
+    }
+  ]
+}
