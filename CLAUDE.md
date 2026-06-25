@@ -15,6 +15,31 @@ and the git workflow.
 
 ---
 
+## Adapter development — validate the live API first
+
+Before writing any adapter or fixture, **make a live API call and inspect the real response**.
+Do not assume field types from documentation or intuition — check the actual payload.
+
+```bash
+curl -s "<endpoint>" -H "User-Agent: Mozilla/5.0" | python3 -c "
+import json, sys; data = json.load(sys.stdin)
+# print first 1-2 items to inspect field names and types
+print(json.dumps(data[0], indent=2))
+"
+```
+
+Key things to verify before coding:
+
+- **Null sentinel values** — some APIs use `0`, `""`, or `[]` instead of `null` to signal "not provided" (e.g. RemoteOK uses `salary_min: 0`). Check the actual value, not just whether the key exists.
+- **Date format** — ISO 8601 string, Unix timestamp (int/float), or something else?
+- **Top-level shape** — array, or `{"jobs": [...]}` wrapper?
+- **Spurious entries** — some APIs include non-job objects in the array (e.g. RemoteOK prepends a legal notice).
+- **Field names** — exact casing (`pubDate` vs `pub_date` vs `date`).
+
+Write the fixture to match the **real** API response shape, including sentinel values like `0` for missing salary. Tests that use unrealistic fixtures will pass but hide production bugs.
+
+---
+
 ## Architecture quick-reference
 
 - **`Job` dataclass** (`src/jobdigest/models.py`) is the universal contract.
