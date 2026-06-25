@@ -1,0 +1,33 @@
+[
+  {
+    "legal": "This data is provided for non-commercial use only. See https://remoteok.com/api for full terms."
+  },
+  {
+    "id": "123456",
+    "slug": "senior-backend-engineer-acme-corp",
+    "url": "https://remoteok.com/remote-jobs/123456",
+    "apply_url": "https://acme.com/jobs/backend",
+    "position": "Senior Backend Engineer",
+    "company": "Acme Corp",
+    "description": "<p>Build scalable backend systems.</p>",
+    "date": "2099-01-01T00:00:00+00:00",
+    "tags": ["python", "backend", "aws"],
+    "location": "Worldwide",
+    "salary_min": 120000,
+    "salary_max": 180000
+  },
+  {
+    "id": "789012",
+    "slug": "react-frontend-beta-ltd",
+    "url": "https://remoteok.com/remote-jobs/789012",
+    "apply_url": "https://beta.io/careers",
+    "position": "React Frontend Developer",
+    "company": "Beta Ltd",
+    "description": null,
+    "date": "2099-01-01T00:00:00+00:00",
+    "tags": ["react", "contract", "javascript"],
+    "location": "USA Only",
+    "salary_min": 0,
+    "salary_max": 0
+  }
+]
