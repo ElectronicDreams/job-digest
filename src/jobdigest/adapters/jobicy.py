@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 from jobdigest.adapters.base import JobSource
 from jobdigest.config import Config
 from jobdigest.models import Job
+from jobdigest.utils.dates import parse_date
 from jobdigest.utils.http import get_json
 from jobdigest.utils.location import normalize_location
 from jobdigest.utils.logging import get_logger
@@ -24,15 +25,6 @@ def _utcnow() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def _parse_date(raw: object) -> datetime | None:
-    if not isinstance(raw, str):
-        return None
-    try:
-        return datetime.fromisoformat(raw)
-    except ValueError:
-        return None
-
-
 class JobicySource(JobSource):
     def __init__(self, config: Config) -> None:
         self._config = config
@@ -49,7 +41,7 @@ class JobicySource(JobSource):
         results: list[Job] = []
 
         for raw in jobs_raw:
-            posted = _parse_date(raw.get("pubDate"))
+            posted = parse_date(raw.get("pubDate"))
             if posted is not None and posted < cutoff:
                 continue
 
