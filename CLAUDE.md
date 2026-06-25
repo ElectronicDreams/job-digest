@@ -62,7 +62,9 @@ Weights sum to 100. Configurable in `config.json`.
 ---
 
 ## Git workflow
-
+- At the start of every session, sync with main before branching:
+  git checkout main && git pull
+  
 - **Never commit directly to `main`.** It is branch-protected and requires a
   passing PR.
 
